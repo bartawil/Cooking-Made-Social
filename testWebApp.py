@@ -1,22 +1,27 @@
-# Importing flask module in the project is mandatory
-# An object of Flask class is our WSGI application.
-from flask import Flask
+from flask import Flask, render_template, request
 
-# Flask constructor takes the name of
-# current module (__name__) as argument.
 app = Flask(__name__)
 
-# The route() function of the Flask class is a decorator,
-# which tells the application which URL should call
-# the associated function.
+recipes = [
+    {
+        'name': 'Pancakes',
+        'ingredients': ['flour', 'eggs', 'milk', 'baking powder'],
+        'instructions': '1. In a large mixing bowl, combine the flour, eggs, milk, and baking powder. Stir until well combined. 2. Heat a large nonstick pan over medium heat. Pour in enough batter to make a small pancake. Cook until bubbles form on the surface, then flip and cook until the pancake is golden brown on both sides. 3. Repeat with the remaining batter. Serve hot, with your favorite toppings.'
+    },
+    {
+        'name': 'Spaghetti Bolognese',
+        'ingredients': ['ground beef', 'spaghetti', 'tomato sauce', 'onion', 'garlic'],
+        'instructions': '1. In a large pot, bring salted water to a boil. Add the spaghetti and cook according to the package instructions. 2. In a separate pan, cook the ground beef over medium heat until it is browned. Add the onion and garlic and cook until the onion is translucent. 3. Add the tomato sauce to the pan with the ground beef and bring to a simmer. 4. Drain the cooked spaghetti and add it to the pan with the sauce. Toss to combine. 5. Serve hot, garnished with grated Parmesan cheese.'
+    }
+]
+
 @app.route('/')
-# ‘/’ URL is bound with hello_world() function.
-def hello_world():
-	return 'BAR - check flask'
+def home():
+    return render_template('home.html', recipes=recipes)
 
-# main driver function
+@app.route('/recipe/<int:index>')
+def recipe(index):
+    return render_template('recipe.html', recipe=recipes[index])
+
 if __name__ == '__main__':
-
-	# run() method of Flask class runs the application
-	# on the local development server.
-	app.run()
+    app.run()
