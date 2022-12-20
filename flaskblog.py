@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_mysqldb import MySQL
 from forms import RegistrationForm, LoginForm, CreateRecipeForm
+import mysql.connector
 
 app = Flask(__name__)
 
@@ -36,22 +37,28 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'database_workshop'
-with app.app_context():
-    data_base.init_app(app)
-    cur = data_base.connect.cursor()
+
+workshop_db = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='1234',
+    database='database_workshop'
+)
+
+workshop_cursor = workshop_db.cursor()
 
 
 def some_query():
     # with app.app_context():
     #     data_base.init_app(app)
     #     cur = data_base.connect.cursor()
-    cur.execute("select name_id, descriptor from recipe where post_id=38")
-    output = cur.fetchall()
+    workshop_cursor.execute("select name_id, descriptor from recipe where post_id=38")
+    output = workshop_cursor.fetchall()
     print((output[0]))
     posts[0]['title'] = (output[0])[0]
     posts[0]['content'] = (output[0])[1]
-    cur.execute("select name_id, descriptor from recipe where post_id=39")
-    output = cur.fetchall()
+    workshop_cursor.execute("select name_id, descriptor from recipe where post_id=39")
+    output = workshop_cursor.fetchall()
     print((output[0]))
     # cur.close()
     posts[1]['title'] = (output[0])[0]
@@ -97,10 +104,10 @@ def check(value):
     #     data_base.init_app(app)
     #     cur = data_base.connect.cursor()
     q = "INSERT INTO post (recipe_name) VALUES (%s)"
-    cur.execute(q, (value,))
-
-    cur.execute(q)
-    cur.close()
+    workshop_cursor.execute(q, (value,))
+    workshop_db.commit()
+    # cur.execute(q)
+    # cur.close()
 
 
 @app.route("/create_recipe", methods=['GET', 'POST'])
