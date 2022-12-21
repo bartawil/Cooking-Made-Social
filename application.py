@@ -39,9 +39,10 @@ def index():
         return f"{userName, userPassword} - You are now logged in"
 
 
-@app.route("/login", methods=['GET'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     return render_template("Login.html")
+
 
 @app.route("/process_login", methods=['POST'])
 def process_login():
@@ -95,7 +96,7 @@ def handle2():
         workshop_cursor.execute("INSERT INTO users(user_password, user_name) VALUES(%s, %s)", (pw, userName))
         workshop_db.commit()
 
-        return flask.redirect(url_for('target', name=userName, password=pw))
+        return flask.redirect(url_for('login', name=userName, password=pw))
     else:
         return render_template("Register.html", password_error="Passwords do not match")
 
@@ -152,7 +153,7 @@ def upload_recipe(value):
     workshop_cursor.execute(q, (name, post_id, minutes, contributer, n_steps, steps, descriptor, n_ingredient, post_id))
     workshop_db.commit()
 
-    
+
 @app.route("/create_recipe", methods=['GET', 'POST'])
 def create_recipe():
     form = CreateRecipeForm()
