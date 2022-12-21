@@ -18,11 +18,11 @@ app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
-from application.authorization.routs import authorization
-from application.posts.routs import posts
-from application.main.routs import main
-from application.upload.routs import upload
-from application.search.routs import search
+from application.moduls.authorization.routs import authorization
+from application.moduls.posts.routs import posts
+from application.moduls.main.routs import main
+from application.moduls.upload.routs import upload
+from application.moduls.search.routs import search
 
 app.register_blueprint(authorization)
 app.register_blueprint(posts)

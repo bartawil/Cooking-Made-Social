@@ -2,7 +2,7 @@ import flask
 from flask import Blueprint, render_template, session, url_for, flash, redirect
 
 from application import workshop_cursor, workshop_db
-from application.upload.forms import CreateRecipeForm
+from application.moduls.upload.forms import CreateRecipeForm
 
 upload = Blueprint('upload', __name__)
 

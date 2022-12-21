@@ -2,7 +2,7 @@ import flask
 from flask import Blueprint, render_template, session, request, url_for
 
 from application import workshop_cursor, workshop_db
-from application.posts import posts
+from application.moduls.posts import posts
 
 authorization = Blueprint('authorization', __name__)
 

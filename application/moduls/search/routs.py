@@ -1,7 +1,7 @@
 import flask
-from flask import Blueprint, render_template, session, url_for, flash, redirect
+from flask import Blueprint, render_template, session, url_for, redirect
 
-from application.search.forms import FindRecipeForm
+from application.moduls.search.forms import FindRecipeForm
 
 search = Blueprint('search', __name__)
 

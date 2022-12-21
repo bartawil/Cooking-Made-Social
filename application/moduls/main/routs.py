@@ -2,7 +2,7 @@ import flask
 from flask import Blueprint, render_template, request, session
 
 from application import workshop_cursor
-from application.posts import posts
+from application.moduls.posts import posts
 
 main = Blueprint('main', __name__)
 
