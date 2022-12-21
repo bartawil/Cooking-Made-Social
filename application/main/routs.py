@@ -16,7 +16,7 @@ def index():
         userPassword = request.form.get("userpassword")
 
         # Check if user already exists in DB
-        sql_q = "SELECT user_name FROM users WHERE user_name=%s and user_password=%s"
+        sql_q = "SELECT user_name FROM authorization WHERE user_name=%s and user_password=%s"
         param_q = (userName, userPassword)
 
         workshop_cursor.execute(sql_q, param_q)

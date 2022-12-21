@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+    <link rel="stylesheet" href="../static/Register.css"/>
+{% endblock %}
+{% block body %}
+{{ super() }}
+    <div class="register-div">
+        <div class="left-div">
+        </div>
+        <div class="right-div">
+            <h1 class="register-header" style="margin-top:18%">Register</h1>
+            <form action="/process-registration" method="post">
+                <input name="regUserName" type="text" placeholder="username" class="input-username">
+                <p style="color: red" align="center">{{ user_error }}</p>
+                <input name="regUserPw" type="password" placeholder="password" class="input-password">
+                <input name="cnfRegUserPw" type="password" placeholder="confirm password" class="input-password">
+               <p style="color: red" align="center">{{ password_error }}</p>
+                <button type="submit" class="register-btn">Sign Up</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
