@@ -26,6 +26,7 @@
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="/home">Home</a>
                 <a class="nav-item nav-link" href="/create_recipe">Create Recipe</a>
+                <a class="nav-item nav-link" href="/recipe_catalog">Find Recipe</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -38,6 +39,8 @@
     </header>
     <main role="main" class="container">
       <div class="row">
+        <div class="col-md-2">
+        </div>
         <div class="col-md-8">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -50,7 +53,7 @@
           {% endwith %}
           {% block content %}{% endblock %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
         </div>
       </div>
     </main>

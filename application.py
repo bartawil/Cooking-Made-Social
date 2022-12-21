@@ -1,10 +1,9 @@
 import flask
+from flask import Flask, render_template, request, url_for, flash, redirect, session
 from flask import Flask, render_template, request, url_for, flash,redirect
+from flask_session import Session
 import mysql.connector
-
-
-from forms import CreateRecipeForm
-
+from forms import CreateRecipeForm, FindRecipeForm
 
 workshop_db = mysql.connector.connect(
     host='localhost',
@@ -18,6 +17,10 @@ workshop_cursor = workshop_db.cursor()
 app = Flask(__name__)
 # Create S.K. for anti csrf attack
 app.config['SECRET_KEY'] = '2136cdc56a8ad364b251f9bb645d1e56'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -52,7 +55,6 @@ def process_login():
     if userName=="" or userPassword =="":
         return render_template("Login.html", user_error="All fields must have value")
 
-
     # Check if user already exists in DB
     sql_q = "SELECT user_name FROM users WHERE user_name=%s and user_password=%s"
     param_q = (userName, userPassword)
@@ -62,7 +64,7 @@ def process_login():
 
     if result is None:
         return render_template("Login.html", user_error="Error in given credentials")
-
+    session['cookie'] = userName
     return flask.redirect(url_for('target', name=userName, password=userPassword))
 
 
@@ -113,6 +115,18 @@ posts = [
         'title': 'Blog Post 2',
         'content': 'Second post content',
         'date_posted': 'April 21, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 3',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 4',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
     }
 ]
 
@@ -124,6 +138,8 @@ def target(name, password):
 
 @app.route("/home")
 def home():
+    if not session.get("cookie"):
+        return flask.redirect('login')
     return render_template('home.html', posts=posts)
 
 
@@ -156,12 +172,29 @@ def upload_recipe(value):
 
 @app.route("/create_recipe", methods=['GET', 'POST'])
 def create_recipe():
-    form = CreateRecipeForm()
-    if form.validate_on_submit():
-        flash(f'Recipe "{form.name.data}" Upload successfully!', 'success')
-        upload_recipe(form.data)
-        return redirect(url_for('home'))
-    return render_template('create_recipe.html', title='Create Recipe', form=form)
+    if not session.get("cookie"):
+        return flask.redirect('login')
+    else:
+        form = CreateRecipeForm()
+        if form.validate_on_submit():
+            flash(f'Recipe "{form.name.data}" Upload successfully!', 'success')
+            upload_recipe(form.data)
+            return redirect(url_for('home'))
+        return render_template('create_recipe.html', title='Create Recipe', form=form)
+
+
+@app.route("/recipe_catalog", methods=['GET', 'POST'])
+def recipe_catalog():
+    if not session.get("cookie"):
+        return flask.redirect('login')
+    else:
+        form = FindRecipeForm()
+        if form.validate_on_submit():
+            # flash(f'Recipe "{form.name.data}" Upload successfully!', 'success')
+            # upload_recipe(form.data)
+            return redirect(url_for('home'))
+        return render_template('recipe_catalog.html', title='Recipe Catalog', form=form)
+
 
 
 if __name__ == '__main__':
