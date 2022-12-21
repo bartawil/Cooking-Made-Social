@@ -46,6 +46,10 @@ def index():
 def login():
     return render_template("Login.html")
 
+@app.route("/logout")
+def logout():
+    session['cookie'] = None
+    return flask.redirect('login')
 
 @app.route("/process_login", methods=['POST'])
 def process_login():
