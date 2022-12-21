@@ -1,0 +1,90 @@
+body {
+    background-image: url("login-back-blurr.jpg");
+    background-size: cover;
+}
+
+.left-div {
+    position: absolute;
+    justify-self: center;
+    background-color: rgb(233, 233, 233);
+    margin-top: 1%;
+    margin-left: -20%;
+    width: 30%;
+    height: 80%;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    background-image: url("login-back.jpg");
+
+}
+
+.right-div {
+    position: absolute;
+    justify-self: center;
+    background-color: pink;
+    background-color: rgb(238, 238, 238);
+    margin-top: 1%;
+    margin-left: 40%;
+    width: 30%;
+    height: 80%;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}
+
+
+.register-header{
+    text-align: center;
+    font-size: 55px;
+}
+
+.register-div {
+    padding: 0%;
+    background-color: none;
+    width:100%;
+    height:100%;
+    display: flex;
+    justify-content: center;
+}
+
+.input-username {
+     background-color:  transparent;
+     border: none;
+     border-bottom: solid black 2.2px;
+     height: 25px;
+     width: 70%;
+     margin-left: 10%;
+     margin-top:10%;
+}
+
+.input-username::placeholder{
+    font-size: 16px;
+}
+
+
+.input-password {
+     background-color:  transparent;
+     border: none;
+     border-bottom: solid black 2.2px;
+     height: 25px;
+     width: 70%;
+     margin-left: 10%;
+     margin-left: 10%;
+     margin-top: 9%;
+}
+
+.input-password::placeholder{
+    font-size: 16px;
+}
+
+.register-btn{
+  font-family: 'Open Sans', sans-serif;
+  color: black;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 17px;
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: 15%;
+  border-radius: 2rem;
+  margin-left:60%;
+  width: 25%;
+  height: 30px;
+}

@@ -21,7 +21,7 @@ def home():
 
 @app.route('/recipe/<int:index>')
 def recipe(index):
-    return render_template('recipe.html', recipe=recipes[index])
+    return render_template('create_recipe.html', recipe=recipes[index])
 
 if __name__ == '__main__':
     app.run()

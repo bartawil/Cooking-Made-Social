@@ -13,18 +13,19 @@ def mysqlconnect():
 	cur = conn.cursor()
 
 	# Select query
-	cur.execute("select post_id, recipe_name from post")
+	cur.execute("select * from users")
 	output = cur.fetchall()
+	print(output)
 
-	flg = 0
-	g = ''
-	for i in output:
-		id = str(i[0])
-		name = str(i[1])
-		q = "UPDATE recipe SET recipe.post_id=" + id + " WHERE recipe.name_id=" + "'"+ name+"'"
-		# print(q)
-		cur.execute(q)
-		conn.commit()
+	# flg = 0
+	# g = ''
+	# for i in output:
+	# 	id = str(i[0])
+	# 	name = str(i[1])
+	# 	q = "select * from users"
+	#
+	# 	cur.execute(q)
+	conn.commit()
 
 
 	# To close the connection
