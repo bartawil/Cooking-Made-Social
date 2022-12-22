@@ -1,6 +1,7 @@
 import flask
-from flask import Blueprint, render_template, session, url_for, redirect
+from flask import Blueprint, render_template, session, url_for, redirect, flash
 
+from application.moduls.search import search_recipe
 from application.moduls.search.forms import FindRecipeForm
 
 search = Blueprint('search', __name__)
@@ -13,8 +14,10 @@ def recipe_catalog():
     else:
         form = FindRecipeForm()
         if form.validate_on_submit():
-            # flash(f'Recipe "{form.name.data}" Upload successfully!', 'success')
-            # upload_recipe(form.data)
-            return redirect(url_for('home.home'))
+            # return the last post id
+            post_id = search_recipe(form.data)
+            if len(post_id) != 0:
+                flash(f'"{len(post_id)}" recipes came from search!', 'success')
+            else:
+                flash(f'Cannot find recipe that contains this string', 'danger')
         return render_template('recipe_catalog.html', title='Recipe Catalog', form=form)
-

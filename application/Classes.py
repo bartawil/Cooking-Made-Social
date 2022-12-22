@@ -32,6 +32,15 @@ def generate_id():
     return (output[0])[0] + 1
 
 
+def find_posts_by_name(name):
+    # Returns 4 posts that contain the string sorted from newest to oldest
+    q = "SELECT * FROM post WHERE recipe_name LIKE (%s) ORDER BY post_id DESC LIMIT 4"
+    str = "%" + name + "%"
+    workshop_cursor.execute(q, (str,))
+    post_list = workshop_cursor.fetchall()
+    return post_list
+
+
 class Post:
     def __init__(self, recipe_name: str, post_id: int):
         self._recipe_name = recipe_name
@@ -77,15 +86,6 @@ class Ingredients:
         workshop_db.commit()
 
 
-
-def newIngredients(ingredients: list):
-    ingredientLst = list()
-    for ingredient in ingredients:
-        recipe_id, ingredient_name = ingredient
-        ingredientLst.append(Post(recipe_id, ingredient_name))
-    return ingredientLst
-
-
 def get_current_user_id():
     q = "SELECT user_id FROM users where user_name = (%s)"
     workshop_cursor.execute(q, (session['cookie'],))
@@ -99,27 +99,11 @@ class Users:
         self._user_name = user_name
 
 
-def newUsers(users: list):
-    userLst = list()
-    for user in users:
-        user_id, user_password, user_name = user
-        userLst.append(Users(user_id, user_password, user_name))
-    return userLst
-
-
 class Likes:
     def __init__(self, like_id: int, post_id: int, user_id: int):
         self._like_id = like_id
         self._post_id = post_id
         self._user_id = user_id
-
-
-def newLikes(likes: list):
-    likesLst = list()
-    for like in likes:
-        like_id, post_id, user_id = like
-        likesLst.append(Likes(like_id, post_id, user_id))
-    return likesLst
 
 
 class Comments:
@@ -128,22 +112,3 @@ class Comments:
         self._post_id = post_id
         self._content = content
         self._user_id = user_id
-
-
-def newComments(comments: list):
-    commentsLst = list()
-    for comment in comments:
-        comment_id, post_id, content, user_id = comment
-        commentsLst.append(Comments(comment_id, post_id, content, user_id))
-    return commentsLst
-
-# class SearchHandler:
-#     def __init__(self, cursor, db):
-#         self.cursos = cursor
-#         self.db = db
-#     def execute_command(self):
-#         q = 'SELECT * FROM authorization'
-#         self.cursos.execute(q)
-#         res = self.cursos.fetchall()
-#         for row in res:
-#             print(row)
