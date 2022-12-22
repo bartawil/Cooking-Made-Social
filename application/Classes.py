@@ -1,3 +1,8 @@
+from flask import session
+
+from application import workshop_db, workshop_cursor
+
+
 class Recipe:
     def __init__(self, name: str, recipe_id: int, minutes: int, contributer_id: int, n_steps: int, steps: str,
                  description: str, n_ingredients: int, post_id: int):
@@ -11,14 +16,20 @@ class Recipe:
         self._n_ingredients = n_ingredients
         self._post_id = post_id
 
+    def insert_to_db(self):
+        q = "INSERT INTO recipe (name_id, recipe_id, minutes, contributer_id, n_steps, steps, " \
+            "descriptor, n_ingredient, post_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        workshop_cursor.execute(q, (
+            self._name, self._post_id, self._minutes,
+            self._contributer_id, self._n_steps, self._steps,
+            self._description, self._n_ingredients, self._post_id))
+        workshop_db.commit()
 
-def newRecipes(recipes: list):
-    recipeLst = list()
-    for recipe in recipes:
-        name, recipe_id, minutes, contributer_id, n_steps, steps, description, n_ingredients, post_id = recipe
-        recipeLst.append(Recipe(name, recipe_id, minutes, contributer_id, n_steps, steps, description, n_ingredients,
-                                post_id))
-    return recipeLst
+
+def generate_id():
+    workshop_cursor.execute("SELECT MAX(post_id) FROM post")
+    output = workshop_cursor.fetchall()
+    return (output[0])[0] + 1
 
 
 class Post:
@@ -26,13 +37,10 @@ class Post:
         self._recipe_name = recipe_name
         self._post_id = post_id
 
-
-def newPosts(posts: list):
-    postLst = list()
-    for post in posts:
-        recipe_name, post_id = post
-        postLst.append(Post(recipe_name, post_id))
-    return postLst
+    def insert_to_db(self):
+        q = "INSERT INTO post (recipe_name, post_id) VALUES (%s, %s)"
+        workshop_cursor.execute(q, (self._recipe_name, self._post_id))
+        workshop_db.commit()
 
 
 class Nutrition:
@@ -47,19 +55,27 @@ class Nutrition:
         self._saturated_fat = saturated_fat
         self._carbohydrates = carbohydrates
 
-
-def newNutrition(nutritions: list):
-    nutritionLst = list()
-    for nutrition in nutritions:
-        recipe_id, calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates = nutrition
-        nutritionLst.append(Nutrition(recipe_id, calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates))
-    return nutritionLst
+    def insert_to_db(self):
+        q = "INSERT INTO nutrition (recipe_id, calories, total_fat, sugar, sodium, " \
+            "protein, saturated_fat, carbohydrates) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        workshop_cursor.execute(q, (self._recipe_id, self._calories, self._total_fat, self._sugar,
+                                    self._sodium, self._protein, self._saturated_fat, self._carbohydrates))
+        workshop_db.commit()
 
 
 class Ingredients:
-    def __init__(self, recipe_id: int, ingredient_name: str):
+    def __init__(self, recipe_id: int, n_ingredient: int, ingredient_list: str):
         self._recipe_id = recipe_id
-        self._ingredient_name = ingredient_name
+        self._ingredient_list = ingredient_list
+        self.n_ingredient = n_ingredient
+
+    def insert_to_db(self):
+        parsed_list = self._ingredient_list.split(",")
+        for i in parsed_list:
+            q = "INSERT INTO ingredients (recipe_id, ingredient_name) VALUES (%s, %s)"
+            workshop_cursor.execute(q, (self._recipe_id, i))
+        workshop_db.commit()
+
 
 
 def newIngredients(ingredients: list):
@@ -68,6 +84,12 @@ def newIngredients(ingredients: list):
         recipe_id, ingredient_name = ingredient
         ingredientLst.append(Post(recipe_id, ingredient_name))
     return ingredientLst
+
+
+def get_current_user_id():
+    q = "SELECT user_id FROM users where user_name = (%s)"
+    workshop_cursor.execute(q, (session['cookie'],))
+    return workshop_cursor.fetchone()[0]
 
 
 class Users:
