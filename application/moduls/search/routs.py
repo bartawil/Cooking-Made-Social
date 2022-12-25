@@ -15,9 +15,9 @@ def recipe_catalog():
         form = FindRecipeForm()
         if form.validate_on_submit():
             # return the last post id
-            post_id = search_recipe(form.data)
-            if len(post_id) != 0:
-                flash(f'"{len(post_id)}" recipes came from search!', 'success')
-            else:
-                flash(f'Cannot find recipe that contains this string', 'danger')
+            posts = search_recipe(form.data)
+            flash(f'{len(posts)} recipes came from search!', 'success')
+            return render_template('home.html', posts=posts)
+            # else:
+            #     flash(f'Cannot find recipe that contains this string', 'danger')
         return render_template('recipe_catalog.html', title='Recipe Catalog', form=form)

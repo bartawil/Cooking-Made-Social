@@ -34,11 +34,12 @@ def generate_id():
 
 def find_posts_by_name(name):
     # Returns 4 posts that contain the string sorted from newest to oldest
-    q = "SELECT * FROM post WHERE recipe_name LIKE (%s) ORDER BY post_id DESC LIMIT 4"
+    q = "SELECT name_id, descriptor FROM recipe WHERE name_id LIKE (%s) ORDER BY recipe_id DESC"
     str = "%" + name + "%"
     workshop_cursor.execute(q, (str,))
     post_list = workshop_cursor.fetchall()
     return post_list
+
 
 
 class Post:
