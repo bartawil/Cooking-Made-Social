@@ -52,6 +52,13 @@ class Post:
         workshop_db.commit()
 
 
+def get_preview_from_db():
+    q = "SELECT recipe.name_id, recipe.descriptor FROM recipe ORDER BY recipe_id DESC limit 4"
+    workshop_cursor.execute(q)
+    output = workshop_cursor.fetchall()
+    return output
+
+
 class Nutrition:
     def __init__(self, recipe_id: int, calories: float, total_fat: float, sugar: float, sodium: float, protein: float,
                  saturated_fat: float, carbohydrates: float):
@@ -93,10 +100,30 @@ def get_current_user_id():
 
 
 class Users:
-    def __init__(self, user_id: int, user_password: str, user_name: str):
-        self._user_id = user_id
-        self._user_password = user_password
+    def __init__(self, user_name: str, user_password: str):
         self._user_name = user_name
+        self._user_password = user_password
+
+    def insert_to_db(self):
+        workshop_cursor.execute("INSERT INTO users(user_password, user_name) VALUES(%s, %s)",
+                                (self._user_password, self._user_name))
+        workshop_db.commit()
+
+    def check_user_password(self):
+        # Check if user already exists in DB
+        sql_q = "SELECT user_name FROM users WHERE user_name=%s and user_password=%s"
+        param_q = (self._user_name, self._user_password)
+
+        workshop_cursor.execute(sql_q, param_q)
+        result = workshop_cursor.fetchone()
+        return result
+
+    def check_if_user_exist(self):
+        # Check if user already exists in DB
+        sql_q = "SELECT user_name FROM users WHERE user_name=%s"
+        param_q = (self._user_name,)
+        workshop_cursor.execute(sql_q, param_q)
+        return workshop_cursor.fetchone()
 
 
 class Likes:

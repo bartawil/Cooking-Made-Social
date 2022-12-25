@@ -2,7 +2,7 @@ import flask
 from flask import Blueprint, render_template, request, session
 
 from application import workshop_cursor
-from application.moduls.posts import posts
+from application.Classes import get_preview_from_db
 
 main = Blueprint('main', __name__)
 
@@ -31,4 +31,4 @@ def index():
 def home():
     if not session.get("cookie"):
         return flask.redirect('login')
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=get_preview_from_db())
