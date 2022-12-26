@@ -4,7 +4,7 @@
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Recipe Catalog</legend>
+            <legend class="border-bottom mb-4">Search Recipe</legend>
             <div class="form-group">
                 {{ form.name.label(class="form-control-label") }}
                 {% if form.name.errors %}
@@ -17,6 +17,93 @@
                 {% else %}
                 {{ form.name(class="form-control form-control-lg") }}
                 {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.user_name.label(class="form-control-label") }}
+                {% if form.user_name.errors %}
+                {{ form.user_name(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.user_name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.user_name(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group row text-center">
+                <div class="col form-group">
+                    {{ form.likes.label(class="form-control-label") }}
+                    {% if form.likes.errors %}
+                    {{ form.likes(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.likes.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.likes(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="col form-group">
+                    {{ form.comments.label(class="form-control-label") }}
+                    {% if form.comments.errors %}
+                    {{ form.comments(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.comments.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.comments(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group row text-center">
+                <div class="col form-group">
+                    {{ form.calories.label(class="form-control-label") }}
+                    {% if form.calories.errors %}
+                    {{ form.calories(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.calories.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.calories(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="col form-group">
+                    {{ form.fat.label(class="form-control-label") }}
+                    {% if form.fat.errors %}
+                    {{ form.fat(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.fat.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.fat(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="col form-group">
+                    {{ form.protein.label(class="form-control-label") }}
+                    {% if form.protein.errors %}
+                    {{ form.protein(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.protein.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.protein(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class=" form-group row">
+                <div class="col-6">
+                    {{ form.sort_by(class="form-control form-control-lg") }}
+                </div>
             </div>
         </fieldset>
         <div class="form-group">

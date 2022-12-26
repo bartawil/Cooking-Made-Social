@@ -1,12 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, FloatField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField, RadioField \
+    , TextAreaField, SelectFieldBase, SearchField, FloatField, SelectMultipleField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
 class CreateRecipeForm(FlaskForm):
     name = StringField('Recipe Name', validators=[DataRequired(), Length(min=0, max=255)])
-    descriptor = StringField('Description')
-    steps = StringField('Steps', validators=[DataRequired(), Length(min=0, max=255)])
+    descriptor = TextAreaField('Description',  validators=[Length(min=0, max=255)])
+    steps = TextAreaField('Steps', validators=[DataRequired(), Length(min=0, max=255)])
     n_steps = IntegerField('Number of steps')
     ingredients = StringField('ingredients', validators=[DataRequired(), Length(min=0, max=255)])
     n_ingredient = IntegerField('Number of ingredient')
