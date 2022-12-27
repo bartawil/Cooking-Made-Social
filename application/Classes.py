@@ -32,28 +32,35 @@ def generate_id():
     return (output[0])[0] + 1
 
 
-def find_posts_by_name(name):
-    # Returns 4 posts that contain the string sorted from newest to oldest
-    q = "SELECT name_id, descriptor FROM recipe WHERE name_id LIKE (%s) ORDER BY recipe_id DESC"
+def find_posts_by_name(name, calories, fat, protein, sort_by):
+    # This SELECT statement will return the name_id, descriptor values
+    # for all recipes where the calories, total_fat, and protein values
+    # in the nutrition table are less than or equal to the given values,
+    # and the name_id matches the given pattern.
+    # The results will be ordered by the recipe_id in descending order.
+    q = "SELECT r.name_id, r.descriptor " \
+        "FROM recipe r " \
+        "JOIN nutrition n ON r.recipe_id = n.recipe_id " \
+        "WHERE n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s) AND r.name_id LIKE (%s) " \
+        "ORDER BY r.{}".format(sort_by)
     str = "%" + name + "%"
-    workshop_cursor.execute(q, (str,))
+    workshop_cursor.execute(q, (calories, fat, protein, str,))
     post_list = workshop_cursor.fetchall()
     return post_list
 
 
-def find_post_by_user_name(name, user_name):
+def find_post_by_user_name(name, user_name, calories, fat, protein, sort_by):
+    # same as find_posts_by_name with user name filter
     q = "SELECT r.name_id, r.descriptor " \
         "FROM recipe r " \
-        "INNER JOIN users u " \
-        "ON r.contributer_id = u.user_id " \
-        "WHERE u.user_name " \
-        "LIKE (%s) " \
-        "AND r.name_id " \
-        "LIKE (%s) ORDER BY r.recipe_id DESC"
-
+        "INNER JOIN users u ON r.contributer_id = u.user_id " \
+        "INNER JOIN nutrition n ON r.recipe_id = n.recipe_id " \
+        "WHERE u.user_name LIKE (%s) AND r.name_id LIKE (%s) " \
+        "AND n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s)" \
+        "ORDER BY r.{}".format(sort_by)
     str_name = "%" + name + "%"
     str_user_name = "%" + user_name + "%"
-    workshop_cursor.execute(q, (str_user_name, str_name,))
+    workshop_cursor.execute(q, (str_user_name, str_name, calories, fat, protein,))
     post_list = workshop_cursor.fetchall()
     return post_list
 
