@@ -41,6 +41,22 @@ def find_posts_by_name(name):
     return post_list
 
 
+def find_post_by_user_name(name, user_name):
+    q = "SELECT r.name_id, r.descriptor " \
+        "FROM recipe r " \
+        "INNER JOIN users u " \
+        "ON r.contributer_id = u.user_id " \
+        "WHERE u.user_name " \
+        "LIKE (%s) " \
+        "AND r.name_id " \
+        "LIKE (%s) ORDER BY r.recipe_id DESC"
+
+    str_name = "%" + name + "%"
+    str_user_name = "%" + user_name + "%"
+    workshop_cursor.execute(q, (str_user_name, str_name,))
+    post_list = workshop_cursor.fetchall()
+    return post_list
+
 
 class Post:
     def __init__(self, recipe_name: str, post_id: int):

@@ -5,16 +5,20 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
 class FindRecipeForm(FlaskForm):
-    name = StringField('Recipe Name', validators=[DataRequired(), Length(min=0, max=255)])
-    calories = FloatField('Calories Max Value')
-    fat = FloatField('Fat Max Value')
-    protein = FloatField('Protein Max Value')
-    sort_by = SelectField('Sort',
-                          choices=[('name', 'Name'), ('time', 'Duration Time '), ('earliest', 'Earliest to Latest'),
+    name = StringField('Recipe Name', validators=[Length(min=0, max=255)])
+
+    user_name = StringField('User Name', validators=[Length(min=0, max=255)])
+
+    likes = IntegerField('Number of Likes', default=0)
+    comments = IntegerField('Number of Comments', default=0)
+
+    calories = FloatField('Calories Max Value', default=float('inf'))
+    fat = FloatField('Fat Max Value', default=float('inf'))
+    protein = FloatField('Protein Max Value', default=float('inf'))
+
+    sort_by = SelectField('Sort By',
+                          choices=[('name', 'Sort By Name'), ('time', 'Duration Time '), ('earliest', 'Earliest to Latest'),
                                    ('latest', 'Latest to Earliest')])
 
-    user_name = StringField('User Name', validators=[DataRequired(), Length(min=0, max=255)])
-    likes = IntegerField('Number of Likes')
-    comments = IntegerField('Number of Comments')
     submit = SubmitField('Search')
 
