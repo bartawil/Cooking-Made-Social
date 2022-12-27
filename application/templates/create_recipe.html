@@ -5,18 +5,33 @@
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Create new recipe</legend>
-            <div class="form-group">
-                {{ form.name.label(class="form-control-label") }}
-                {% if form.name.errors %}
-                {{ form.name(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.name.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+            <div class="row">
+                <div class="col-8 form-group">
+                    {{ form.name.label(class="form-control-label") }}
+                    {% if form.name.errors %}
+                    {{ form.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.name.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.name(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.name(class="form-control form-control-lg") }}
-                {% endif %}
+                <div class="col-4 text-center form-group">
+                    {{ form.minutes.label(class="form-control-label") }}
+                    {% if form.minutes.errors %}
+                    {{ form.minutes(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.minutes.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.minutes(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
             </div>
             <div class="form-group">
                 {{ form.descriptor.label(class="form-control-label") }}
@@ -28,7 +43,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.descriptor(class="form-control form-control-lg") }}
+                {{ form.descriptor(class="form-control form-control-lg", style="height: 50px") }}
                 {% endif %}
             </div>
             <div class="form-group">
@@ -41,20 +56,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.steps(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.n_steps.label(class="form-control-label") }}
-                {% if form.n_steps.errors %}
-                {{ form.n_steps(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.n_steps.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.n_steps(class="form-control form-control-lg") }}
+                {{ form.steps(class="form-control form-control-lg", style="height: 150px") }}
                 {% endif %}
             </div>
             <div class="form-group">
@@ -70,122 +72,127 @@
                 {{ form.ingredients(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class="form-group">
-                {{ form.n_ingredient.label(class="form-control-label") }}
-                {% if form.n_ingredient.errors %}
-                {{ form.n_ingredient(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.n_ingredient.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+            <div class="row">
+                <div class="col form-group">
+                    {{ form.calories.label(class="form-control-label") }}
+                    {% if form.calories.errors %}
+                    {{ form.calories(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.calories.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.calories(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.n_ingredient(class="form-control form-control-lg") }}
-                {% endif %}
+                <div class="col form-group">
+                    {{ form.n_ingredient.label(class="form-control-label") }}
+                    {% if form.n_ingredient.errors %}
+                    {{ form.n_ingredient(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.n_ingredient.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.n_ingredient(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="col form-group">
+                    {{ form.n_steps.label(class="form-control-label") }}
+                    {% if form.n_steps.errors %}
+                    {{ form.n_steps(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.n_steps.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.n_steps(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
             </div>
-            <div class="form-group">
-                {{ form.minutes.label(class="form-control-label") }}
-                {% if form.minutes.errors %}
-                {{ form.minutes(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.minutes.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+            <div class="row">
+                <div class="col form-group">
+                    {{ form.carbohydrate.label(class="form-control-label") }}
+                    {% if form.carbohydrate.errors %}
+                    {{ form.carbohydrate(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.carbohydrate.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.carbohydrate(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.minutes(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.calories.label(class="form-control-label") }}
-                {% if form.calories.errors %}
-                {{ form.calories(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.calories.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+                <div class="col form-group">
+                    {{ form.protein.label(class="form-control-label") }}
+                    {% if form.protein.errors %}
+                    {{ form.protein(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.protein.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.protein(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.calories(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.total_fat.label(class="form-control-label") }}
-                {% if form.total_fat.errors %}
-                {{ form.total_fat(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.total_fat.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+                <div class="col form-group">
+                    {{ form.total_fat.label(class="form-control-label") }}
+                    {% if form.total_fat.errors %}
+                    {{ form.total_fat(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.total_fat.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.total_fat(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.total_fat(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.sugar.label(class="form-control-label") }}
-                {% if form.sugar.errors %}
-                {{ form.sugar(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.sugar.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+                <div class="col form-group">
+                    {{ form.sugar.label(class="form-control-label") }}
+                    {% if form.sugar.errors %}
+                    {{ form.sugar(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.sugar.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.sugar(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.sugar(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.sodium.label(class="form-control-label") }}
-                {% if form.sodium.errors %}
-                {{ form.sodium(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.sodium.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+                <div class="col form-group">
+                    {{ form.sodium.label(class="form-control-label") }}
+                    {% if form.sodium.errors %}
+                    {{ form.sodium(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.sodium.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.sodium(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.sodium(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.protein.label(class="form-control-label") }}
-                {% if form.protein.errors %}
-                {{ form.protein(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.protein.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+                <div class="col form-group">
+                    {{ form.saturated_fat.label(class="form-control-label") }}
+                    {% if form.saturated_fat.errors %}
+                    {{ form.saturated_fat(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.saturated_fat.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.saturated_fat(class="form-control form-control-lg") }}
+                    {% endif %}
                 </div>
-                {% else %}
-                {{ form.protein(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.saturated_fat.label(class="form-control-label") }}
-                {% if form.saturated_fat.errors %}
-                {{ form.saturated_fat(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.saturated_fat.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.saturated_fat(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.carbohydrate.label(class="form-control-label") }}
-                {% if form.carbohydrate.errors %}
-                {{ form.carbohydrate(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.carbohydrate.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.carbohydrate(class="form-control form-control-lg") }}
-                {% endif %}
             </div>
         </fieldset>
         <div class="form-group">

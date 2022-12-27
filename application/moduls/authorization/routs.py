@@ -68,4 +68,5 @@ def handle2():
 
 @authorization.route("/target/<name>&<password>", methods=['GET', 'POST'])
 def target(name, password):
-    return render_template("home.html", posts=get_preview_from_db())
+    posts = get_preview_from_db()
+    return render_template("home.html", posts=posts)

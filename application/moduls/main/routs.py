@@ -31,4 +31,5 @@ def index():
 def home():
     if not session.get("cookie"):
         return flask.redirect('login')
-    return render_template('home.html', posts=get_preview_from_db())
+    posts = get_preview_from_db()
+    return render_template('home.html', posts=posts)

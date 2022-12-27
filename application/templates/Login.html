@@ -1,28 +1,29 @@
 {% extends "layout.html" %}
 {% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="../static/Login.css"/>
-    <title>Cooking Made Social</title>
+{{ super() }}
+<link rel="stylesheet" href="../static/Login.css"/>
+<title>Cooking Made Social</title>
 {% endblock %}
 {% block body %}
-    {{ super() }}
-    <div class="login-div">
-        <div class="left-div"></div>
-        <div class="right-div">
-            <h1 class="name-header" style="margin-top:18%">Login</h1>
-            <form action="/process_login" method="POST">
-                <input name='username' type="text" placeholder="username" class="input-usrnmae">
-                <p style="color: red" align="center">{{ user_error }}</p>
-                <input name='userpassword' type="password" placeholder="password" class="input-password">
-                <p style="color: red" align="center">{{ password_error }}</p>
-                <button type="submit" class="login-btn">Login</button>
-            </form>
-            <div class="sign-up-div">
-                Not Registered Yet?
+{{ super() }}
+<div class="login-div">
+    <div class="left-div"></div>
+    <div class="right-div">
+        <h1 class="name-header" style="margin-top:18%">Login</h1>
+        <form action="/process_login" method="POST">
+            <input name='username' type="text" placeholder="username" class="input-usrnmae">
+            <p style="color: red" align="center">{{ user_error }}</p>
+            <input name='userpassword' type="password" placeholder="password" class="input-password">
+            <p style="color: red" align="center">{{ password_error }}</p>
+            <button type="submit" class="login-btn">Login</button>
+            <div class="sign-up-div row">
                 <form action="/register" method="get" class="sign-up-form">
+                    Not Registered Yet?
                     <button type="submit" class="sign-up-btn">Sign Up</button>
                 </form>
             </div>
-        </div>
+        </form>
+
     </div>
+</div>
 {% endblock %}
