@@ -2,7 +2,9 @@ import flask
 from flask import Blueprint, render_template, session, url_for, redirect, flash
 
 from application.moduls.search import search_recipe
+from application.moduls.search.forms import LikesAndCommentsSearchForm
 from application.moduls.search.forms import FindRecipeForm
+from application.Classes import ComplexQuery
 
 search = Blueprint('search', __name__)
 
@@ -21,3 +23,18 @@ def recipe_catalog():
             # else:
             #     flash(f'Cannot find recipe that contains this string', 'danger')
         return render_template('recipe_catalog.html', title='Recipe Catalog', form=form)
+
+
+@search.route("/LikeAndCommentsSearchHandler", methods=['POST'])
+def LikeAndCommentsSearchHandler():
+    if not session.get("cookie"):
+        return flask.redirect('login')
+    else:
+        form = LikesAndCommentsSearchForm()
+
+        if form.validate_on_submit():
+            complexQuery = ComplexQuery(form.likes.data, form.comments.data)
+            posts = complexQuery.execute_complex_query()
+            return render_template('home.html', posts=posts)
+
+    return render_template('recipe_catalog.html', title='Recipe Catalog', form=form)

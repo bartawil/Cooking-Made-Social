@@ -22,3 +22,12 @@ class FindRecipeForm(FlaskForm):
 
     submit = SubmitField('Search')
 
+
+class LikesAndCommentsSearchForm(FlaskForm):
+    likes = IntegerField('Number of Likes', default=0)
+    comments = IntegerField('Number of Comments', default=0)
+
+    sort_by = SelectField('Sort By',
+                          choices=[('name', 'Sort By Name'), ('time', 'Duration Time '), ('earliest', 'Earliest to Latest'),
+                                   ('latest', 'Latest to Earliest')])
+    submit = SubmitField('Search')

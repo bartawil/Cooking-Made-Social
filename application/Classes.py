@@ -163,3 +163,26 @@ class Comments:
         self._post_id = post_id
         self._content = content
         self._user_id = user_id
+
+
+class ComplexQuery:
+    def __init__(self, likes, comment):
+        query = f'SELECT * FROM recipe as rtag ' \
+                f'WHERE rtag.recipe_id ' \
+                f'IN ' \
+                f'(' \
+                f'SELECT recipe_id FROM ' \
+                f'(' \
+                f'SELECT recipe_id FROM recipe as r INNER JOIN comments as c on r.recipe_id=c.post_id ' \
+                f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) > {comment} ' \
+                f'UNION ALL ' \
+                f'SELECT recipe_id FROM recipe as r INNER JOIN likes as l on r.recipe_id = l.post_id ' \
+                f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) > {likes} ' \
+                f') t GROUP BY recipe_id HAVING count(recipe_id)=2 ' \
+                f')'
+        self.query = query
+
+    def execute_complex_query(self):
+        workshop_cursor.execute(self.query)
+        posts = workshop_cursor.fetchall()
+        return posts
