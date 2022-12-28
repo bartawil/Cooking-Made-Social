@@ -1,5 +1,5 @@
 import flask
-from flask import Blueprint, render_template, session, url_for, redirect, flash
+from flask import Blueprint, render_template, session, flash
 
 from application.moduls.search import search_recipe
 from application.moduls.search.forms import LikesAndCommentsSearchForm
@@ -20,21 +20,18 @@ def recipe_catalog():
             posts = search_recipe(form.data)
             flash(f'{len(posts)} recipes came from search!', 'success')
             return render_template('home.html', posts=posts)
-            # else:
-            #     flash(f'Cannot find recipe that contains this string', 'danger')
         return render_template('recipe_catalog.html', title='Recipe Catalog', form=form)
 
 
-@search.route("/LikeAndCommentsSearchHandler", methods=['POST'])
-def LikeAndCommentsSearchHandler():
+@search.route("/like_and_comments_search", methods=['POST'])
+def like_and_comments_search():
     if not session.get("cookie"):
         return flask.redirect('login')
     else:
         form = LikesAndCommentsSearchForm()
-
         if form.validate_on_submit():
-            complexQuery = ComplexQuery(form.likes.data, form.comments.data)
-            posts = complexQuery.execute_complex_query()
+            complex_query = ComplexQuery(form.likes.data, form.comments.data, form.sort_by.data)
+            posts = complex_query.execute_complex_query()
+            flash(f'{len(posts)} recipes came from search!', 'success')
             return render_template('home.html', posts=posts)
-
     return render_template('recipe_catalog.html', title='Recipe Catalog', form=form)

@@ -1,4 +1,4 @@
-from application.Classes import Post, find_posts_by_name, find_post_by_user_name
+from application.Classes import find_posts_by_name, find_post_by_user_name
 
 
 def search_recipe(value):

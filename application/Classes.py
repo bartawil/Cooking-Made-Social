@@ -77,7 +77,7 @@ class Post:
 
 
 def get_preview_from_db():
-    q = "SELECT recipe.name_id, recipe.descriptor FROM recipe ORDER BY recipe_id DESC limit 4"
+    q = "SELECT recipe.name_id, recipe.descriptor FROM recipe ORDER BY recipe_id DESC limit 10"
     workshop_cursor.execute(q)
     output = workshop_cursor.fetchall()
     return output
@@ -166,9 +166,18 @@ class Comments:
 
 
 class ComplexQuery:
-    def __init__(self, likes, comment):
-        query = f'SELECT * FROM recipe as rtag ' \
-                f'WHERE rtag.recipe_id ' \
+    def __init__(self, likes, comment, sort_by):
+        if sort_by == 'name':
+            sort_by = 'name_id'
+        elif sort_by == 'time':
+            sort_by = 'minutes asc'
+        elif sort_by == 'earliest':
+            sort_by = 'recipe_id asc'
+        elif sort_by == 'latest':
+            sort_by = 'recipe_id desc'
+
+        query = f'SELECT name_id, descriptor FROM recipe as r_tag ' \
+                f'WHERE r_tag.recipe_id ' \
                 f'IN ' \
                 f'(' \
                 f'SELECT recipe_id FROM ' \
@@ -179,7 +188,7 @@ class ComplexQuery:
                 f'SELECT recipe_id FROM recipe as r INNER JOIN likes as l on r.recipe_id = l.post_id ' \
                 f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) > {likes} ' \
                 f') t GROUP BY recipe_id HAVING count(recipe_id)=2 ' \
-                f')'
+                f') ORDER BY {sort_by}'
         self.query = query
 
     def execute_complex_query(self):

@@ -28,6 +28,7 @@ class LikesAndCommentsSearchForm(FlaskForm):
     comments = IntegerField('Number of Comments', default=0)
 
     sort_by = SelectField('Sort By',
-                          choices=[('name', 'Sort By Name'), ('time', 'Duration Time '), ('earliest', 'Earliest to Latest'),
-                                   ('latest', 'Latest to Earliest')])
+                          choices=[('name', 'Sort by Name'), ('time', 'Duration Time '),
+                                   ('earliest', 'Earliest to Latest'), ('latest', 'Latest to Earliest')])
+
     submit = SubmitField('Search')

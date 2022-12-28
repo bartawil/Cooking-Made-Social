@@ -1,0 +1,155 @@
+body {
+padding: 0%;
+background-image: url('recipe-post.jpg');
+background-size: cover;
+}
+.top-data-div {
+    border: none;
+    border-bottom: solid black 3px;
+    margin-top: 5%;
+    text-align: center;
+    margin-bottom: 2%;
+}
+
+.category {
+    display: inline-block;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-weight: bold;
+}
+
+.category-data {
+    display: inline-block;
+    padding-left: 1%;
+    padding-right: 6%;
+    font-family: "Lucida Console", "Courier New", monospace;
+
+}
+
+.outer-div {
+    width: 100%;
+    margin-top:-4%;
+    padding-top: 10%;
+    height: 700px;
+}
+
+.try {
+background-image: url('recipe-background.jpg');
+background-size: cover;
+height: 100%;
+}
+.main-div {
+    margin-top: -4%;
+    padding-top: 4%;
+    width: 70%;
+    margin-left: 12.8%;
+    background-color: white;
+
+}
+
+.recipe-name {
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: 30px;
+}
+
+.ingredients-div {
+    width: 25%;
+    float:left;
+    font-family: "Lucida Console", "Courier New", monospace;
+
+}
+
+.steps-div {
+    margin-left: 40%;
+    overflow: hidden;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.ing-steps-header{
+    font-weight: bold;
+    font-size: 17px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    margin-bottom: 2%;
+    margin-left: 6%;
+}
+
+.nutrition-header {
+    font-weight: bold;
+    font-size: 17px;
+    font-family: "Lucida Console", "Courier New", monospace;
+
+}
+
+.ingredients{
+    margin-left: 15%;
+    font-family: "Lucida Console", "Courier New", monospace;
+    margin-top: -4%;
+}
+
+.steps {
+    margin-left: 10%;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.nutrition-cat {
+    display: inline;
+    font-size: 16px;
+    margin-left: 15%;
+    font-family: "Lucida Console", "Courier New", monospace;
+    float: left;
+    padding-right: 4%;
+    font-weight: 500;
+    margin-top: -4%;
+}
+
+#comment-header{
+    font-size: 20px;
+    margin-top:15%;
+    color: white;
+}
+
+.new-comment {
+    width:65%;
+    border: none;
+    background-color: rgba(233, 233, 233, 0.7);
+    height: 30px;
+    background-color: transparent;
+}
+
+.new-comment::placeholder {
+    padding-left: 5%;
+}
+
+.comment-username {
+    float:left;
+    display:inline;
+    font-weight: bold;
+    padding-right: 2%;
+    margin-left: 0%;
+}
+
+.comment-content {
+    overflow:hidden;
+}
+
+.comments-div {
+    height: 250px;
+    overflow: auto;
+    margin-left: 10%;
+}
+
+.add-comment-btn{
+    border: none;
+    background: none;
+    margin-left: 27%;
+}
+
+.new-comment-div{
+    border: none;
+    background-color: rgba(233, 233, 233, 0.7);
+    height: 30px;
+    margin-left: 9%;
+    padding: 0%;
+    width: 55%;
+}
+
