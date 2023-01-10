@@ -1,13 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
+<link rel="stylesheet" href="../static/Home.css" xmlns="http://www.w3.org/1999/html"/>
     {% for post in posts %}
-        <article class="media content-section">
+        <card><article class="media content-section recipe-card">
           <div class="media-body">
             <div class="article-metadata">
-                <h2><a class="article-title" href="#">{{ post[0] }}</a></h2>
+                <h2><a class="article-title" href="/recipe/{{post[2]}}">{{ post[0] }}</a></h2>
             </div>
             <p class="article-content">{{ post[1] }}</p>
           </div>
         </article>
+            </card>
     {% endfor %}
 {% endblock content %}

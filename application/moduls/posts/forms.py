@@ -32,9 +32,9 @@ def get_username(user_id):
     return username[0]
 
 
-def get_comments(user_id):
-    query = "SELECT * FROM comments WHERE comments.user_id=%s"
-    workshop_cursor.execute(query, (user_id[0][0],))
+def get_comments(post_id):
+    query = "SELECT * FROM comments WHERE comments.post_id=%s"
+    workshop_cursor.execute(query, (post_id,))
     commnt = workshop_cursor.fetchall()
     return commnt
 
@@ -46,3 +46,11 @@ def add_comment(comment_id, recipe, user_id):
     query = 'INSERT INTO comments (comment_id, post_id, content, user_id) VALUES (%s, %s, %s, %s)'
     workshop_cursor.execute(query, (comment_id, recipe[0][8], comment_content, user_id[0][0]))
     workshop_db.commit()
+
+def get_likes(post_id):
+    query = 'SELECT * FROM likes WHERE likes.post_id=%s'
+    workshop_cursor.execute(query, (post_id,))
+    likes = workshop_cursor.fetchall()
+    return len(likes)
+
+

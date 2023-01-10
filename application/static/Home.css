@@ -1,0 +1,9 @@
+body{
+    background-image: url("home6.png");
+    background-size: contain;
+}
+.recipe-card {
+    padding: 4%;
+    border-radius: 2rem;
+    box-shadow: 8px 8px 8px rgba(23, 21, 21, 0.557);
+}

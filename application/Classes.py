@@ -38,7 +38,7 @@ def find_posts_by_name(name, calories, fat, protein, sort_by):
     # in the nutrition table are less than or equal to the given values,
     # and the name_id matches the given pattern.
     # The results will be ordered by the recipe_id in descending order.
-    q = "SELECT r.name_id, r.descriptor " \
+    q = "SELECT r.name_id, r.descriptor, r.post_id " \
         "FROM recipe r " \
         "JOIN nutrition n ON r.recipe_id = n.recipe_id " \
         "WHERE n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s) AND r.name_id LIKE (%s) " \
@@ -51,7 +51,7 @@ def find_posts_by_name(name, calories, fat, protein, sort_by):
 
 def find_post_by_user_name(name, user_name, calories, fat, protein, sort_by):
     # same as find_posts_by_name with user name filter
-    q = "SELECT r.name_id, r.descriptor " \
+    q = "SELECT r.name_id, r.descriptor, r.post_id " \
         "FROM recipe r " \
         "INNER JOIN users u ON r.contributer_id = u.user_id " \
         "INNER JOIN nutrition n ON r.recipe_id = n.recipe_id " \
@@ -77,7 +77,7 @@ class Post:
 
 
 def get_preview_from_db():
-    q = "SELECT recipe.name_id, recipe.descriptor FROM recipe ORDER BY recipe_id DESC limit 10"
+    q = "SELECT recipe.name_id, recipe.descriptor, recipe.post_id FROM recipe ORDER BY recipe_id DESC limit 10"
     workshop_cursor.execute(q)
     output = workshop_cursor.fetchall()
     return output
@@ -176,17 +176,17 @@ class ComplexQuery:
         elif sort_by == 'latest':
             sort_by = 'recipe_id desc'
 
-        query = f'SELECT name_id, descriptor FROM recipe as r_tag ' \
+        query = f'SELECT name_id, descriptor, post_id FROM recipe as r_tag ' \
                 f'WHERE r_tag.recipe_id ' \
                 f'IN ' \
                 f'(' \
                 f'SELECT recipe_id FROM ' \
                 f'(' \
                 f'SELECT recipe_id FROM recipe as r INNER JOIN comments as c on r.recipe_id=c.post_id ' \
-                f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) > {comment} ' \
+                f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) >= {comment} ' \
                 f'UNION ALL ' \
                 f'SELECT recipe_id FROM recipe as r INNER JOIN likes as l on r.recipe_id = l.post_id ' \
-                f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) > {likes} ' \
+                f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) >= {likes} ' \
                 f') t GROUP BY recipe_id HAVING count(recipe_id)=2 ' \
                 f') ORDER BY {sort_by}'
         self.query = query

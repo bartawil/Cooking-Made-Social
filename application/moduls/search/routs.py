@@ -30,6 +30,10 @@ def like_and_comments_search():
     else:
         form = LikesAndCommentsSearchForm()
         if form.validate_on_submit():
+            if form.likes.data == 0:
+                form.likes.data = 1
+            if form.comments.data == 0:
+                form.comments.data = 1
             complex_query = ComplexQuery(form.likes.data, form.comments.data, form.sort_by.data)
             posts = complex_query.execute_complex_query()
             flash(f'{len(posts)} recipes came from search!', 'success')

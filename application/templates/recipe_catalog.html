@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="content-section">
+<link rel="stylesheet" href="../static/Recipe_Catalog.css" xmlns="http://www.w3.org/1999/html"/>
+<div class="content-section search-form">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Search by recipe</legend>
+            <legend class="border-bottom mb-4 search-cat">Search by recipe</legend>
             <div class="form-group">
                 {{ form.name.label(class="form-control-label") }}
                 {% if form.name.errors %}
@@ -83,11 +84,11 @@
         </div>
     </form>
 </div>
-<div class="content-section">
+<div class="content-section search-form">
     <form method="POST" action="like_and_comments_search">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Search by Likes and Comments</legend>
+            <legend class="border-bottom mb-4 search-cat">Search by Likes and Comments</legend>
             <div class="form-group row text-center">
                 <div class="col form-group">
                     {{ form.likes.label(class="form-control-label") }}

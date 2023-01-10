@@ -1,0 +1,14 @@
+body{
+    background-image: url("home6.png");
+    background-size: contain;
+}
+
+.create-form {
+    padding: 5%;
+    border-radius: 2rem;
+}
+
+.create-header {
+    font-size: 30px;
+    font-weight: 500;
+}

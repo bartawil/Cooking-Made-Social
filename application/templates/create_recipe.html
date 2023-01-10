@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="content-section">
+<link rel="stylesheet" href="../static/Create_Recipe.css" xmlns="http://www.w3.org/1999/html"/>
+<div class="content-section create-form">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Create new recipe</legend>
+            <legend class="border-bottom mb-4 create-header">Create new recipe</legend>
             <div class="row">
                 <div class="col-8 form-group">
                     {{ form.name.label(class="form-control-label") }}
@@ -195,7 +196,7 @@
                 </div>
             </div>
         </fieldset>
-        <div class="form-group">
+        <div class="form-group create-btn">
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
