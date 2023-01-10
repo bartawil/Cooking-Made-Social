@@ -51,13 +51,18 @@ background-size: cover;
 }
 
 .ingredients-div {
-    width: 25%;
+    width: 33%;
     float:left;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .steps-div {
     margin-left: 40%;
     overflow: hidden;
+    width: 33%;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .ing-steps-header{
@@ -85,10 +90,10 @@ background-size: cover;
 .nutrition-cat {
     display: inline;
     font-size: 16px;
+    font-weight: 500;
     margin-left: 15%;
     float: left;
     padding-right: 4%;
-    font-weight: 500;
     margin-top: -4%;
 }
 
@@ -99,11 +104,12 @@ background-size: cover;
 }
 
 .new-comment {
-    width:65%;
+    width:63%;
     border: none;
     background-color: rgba(233, 233, 233, 0.7);
-    height: 30px;
+    height: 4vh;
     background-color: transparent;
+    margin-left: 2%;
 }
 
 .new-comment::placeholder {
@@ -125,7 +131,7 @@ background-size: cover;
 .comments-div {
     height: 250px;
     overflow: auto;
-    margin-left: 10%;
+    margin-left: 6%;
 }
 
 .add-comment-btn{
@@ -136,11 +142,10 @@ background-size: cover;
 
 .new-comment-div{
     border: none;
-    background-color: rgba(233, 233, 233, 0.7);
-    height: 30px;
-    margin-left: 9%;
-    padding: 0%;
-    width: 55%;
+    background-color: rgba(210, 210, 210, 0.3);
+    height: 8vh;
+    width: 100%;
+    border-radius: 2rem;
 }
 
 .like {
@@ -166,4 +171,8 @@ background-size: cover;
     border: none;
     width: 100%;
     margin-left: 0%
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
 }

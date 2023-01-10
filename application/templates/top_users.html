@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+<link rel="stylesheet" href="../static/top_users.css" xmlns="http://www.w3.org/1999/html"/>
+        <card>
+            <article class="media content-section top-user-card">
+          <div class="media-body">
+            <div class="article-metadata">
+                                <h6 class="top-users">TOP USERS</h6>
+                <p style="font-size: 20px; margin-left: 1%">according to likes</p>
+            </div>
+                        <ol style="margin-top: 6%">
+                {% for post in users %}
+                <li style="font-size: 25px; font-weight: bold">
+                    <h2><a class="article-title">{{ post[1] }}</a></h2>
+                </li>
+                {% endfor %}
+            </ol>
+          </div>
+        </article>
+        </card>
+{% endblock content %}

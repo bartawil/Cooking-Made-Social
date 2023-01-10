@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, request
 
 from application import workshop_db, workshop_cursor
 
@@ -18,7 +18,7 @@ class Recipe:
 
     def insert_to_db(self):
         q = "INSERT INTO recipe (name_id, recipe_id, minutes, contributer_id, n_steps, steps, " \
-            "descriptor, n_ingredient, post_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            "descriptor, n_ingredient, post_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) "
         workshop_cursor.execute(q, (
             self._name, self._post_id, self._minutes,
             self._contributer_id, self._n_steps, self._steps,
@@ -41,8 +41,8 @@ def find_posts_by_name(name, calories, fat, protein, sort_by):
     q = "SELECT r.name_id, r.descriptor, r.post_id " \
         "FROM recipe r " \
         "JOIN nutrition n ON r.recipe_id = n.recipe_id " \
-        "WHERE n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s) AND r.name_id LIKE (%s) " \
-        "ORDER BY r.{}".format(sort_by)
+        "WHERE n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s) AND r.name_id LIKE (%s)" \
+        "ORDER BY r.{} limit 1000".format(sort_by)
     str = "%" + name + "%"
     workshop_cursor.execute(q, (calories, fat, protein, str,))
     post_list = workshop_cursor.fetchall()
@@ -57,7 +57,7 @@ def find_post_by_user_name(name, user_name, calories, fat, protein, sort_by):
         "INNER JOIN nutrition n ON r.recipe_id = n.recipe_id " \
         "WHERE u.user_name LIKE (%s) AND r.name_id LIKE (%s) " \
         "AND n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s)" \
-        "ORDER BY r.{}".format(sort_by)
+        "ORDER BY r.{}  limit 1000".format(sort_by)
     str_name = "%" + name + "%"
     str_user_name = "%" + user_name + "%"
     workshop_cursor.execute(q, (str_user_name, str_name, calories, fat, protein,))
@@ -121,6 +121,14 @@ def get_current_user_id():
     q = "SELECT user_id FROM users where user_name = (%s)"
     workshop_cursor.execute(q, (session['cookie'],))
     return workshop_cursor.fetchone()[0]
+
+
+def get_top_users():
+    q = "SELECT likes.user_id, users.user_name FROM likes INNER join users ON users.user_id=likes.user_id " \
+        "GROUP BY user_id ORDER BY COUNT(*) desc limit 1000"
+    workshop_cursor.execute(q)
+    users = workshop_cursor.fetchall()
+    return users
 
 
 class Users:
@@ -188,10 +196,76 @@ class ComplexQuery:
                 f'SELECT recipe_id FROM recipe as r INNER JOIN likes as l on r.recipe_id = l.post_id ' \
                 f'GROUP BY r.recipe_id HAVING COUNT(recipe_id) >= {likes} ' \
                 f') t GROUP BY recipe_id HAVING count(recipe_id)=2 ' \
-                f') ORDER BY {sort_by}'
+                f') ORDER BY {sort_by} limit 1000'
         self.query = query
 
     def execute_complex_query(self):
         workshop_cursor.execute(self.query)
         posts = workshop_cursor.fetchall()
         return posts
+
+
+class RecipePost:
+    def __init__(self):
+        pass
+
+
+    def get_recipe(self, post_id):
+        query = "SELECT * FROM recipe WHERE recipe.post_id=%s"
+        workshop_cursor.execute(query, (post_id,))
+        recipe = workshop_cursor.fetchall()
+        return recipe
+
+    def get_ingredients(self, recipe_id):
+        query = "SELECT * FROM ingredients WHERE recipe_id=%s"
+        workshop_cursor.execute(query, (recipe_id,))
+        ingredients = workshop_cursor.fetchall()
+        return ingredients
+
+    def get_nutrition(self, recipe_id):
+        query = "SELECT * FROM nutrition WHERE recipe_id=%s"
+        workshop_cursor.execute(query, (recipe_id,))
+        nutrition = workshop_cursor.fetchall()
+        return nutrition
+
+    def get_user_id(self):
+        query = "SELECT user_id FROM users WHERE user_name=%s"
+        user_name = session.get("cookie")
+        workshop_cursor.execute(query, (user_name,))
+        user_id = workshop_cursor.fetchall()
+        return user_id
+
+    def get_username(self, user_id):
+        query = "SELECT user_name FROM users WHERE users.user_id=%s"
+        workshop_cursor.execute(query, (user_id,))
+        username = workshop_cursor.fetchall()
+        return username[0]
+
+    def get_comments(self, post_id):
+        query = "SELECT * FROM comments WHERE comments.post_id=%s"
+        workshop_cursor.execute(query, (post_id,))
+        commnt = workshop_cursor.fetchall()
+        return commnt
+
+    def add_comment(self, comment_id, recipe, user_id):
+        comment_content = request.form.get("comment")
+        if comment_content is None:
+            return
+        query = 'INSERT INTO comments (comment_id, post_id, content, user_id) VALUES (%s, %s, %s, %s)'
+        workshop_cursor.execute(query, (comment_id, recipe[0][8], comment_content, user_id[0][0]))
+        workshop_db.commit()
+
+    def get_likes(self, post_id):
+        query = 'SELECT * FROM likes WHERE likes.post_id=%s'
+        workshop_cursor.execute(query, (post_id,))
+        likes = workshop_cursor.fetchall()
+        return len(likes)
+
+    def add_like(self, post_id):
+        user_id = self.get_user_id()[0][0]
+        query = f'INSERT INTO likes(post_id,user_id) VALUES{post_id, user_id}'
+        query_check = f'SELECT * FROM likes WHERE user_id={user_id} AND post_id={post_id}'
+        workshop_cursor.execute(query_check)
+        if not workshop_cursor.fetchall():
+            workshop_cursor.execute(query)
+            workshop_db.commit()

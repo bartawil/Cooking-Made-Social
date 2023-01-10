@@ -4,9 +4,18 @@ from flask import Blueprint, render_template, session, flash
 from application.moduls.search import search_recipe
 from application.moduls.search.forms import LikesAndCommentsSearchForm
 from application.moduls.search.forms import FindRecipeForm
-from application.Classes import ComplexQuery
+from application.Classes import ComplexQuery, get_top_users
 
 search = Blueprint('search', __name__)
+
+
+@search.route("/top_users", methods=['GET'])
+def top_users():
+    if not session.get("cookie"):
+        return flask.redirect('login')
+    else:
+        users = get_top_users()
+        return render_template('top_users.html', title='Top Users', users=users)
 
 
 @search.route("/recipe_catalog", methods=['GET', 'POST'])
