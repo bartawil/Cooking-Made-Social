@@ -107,3 +107,8 @@ margin-top:10%;
     width:50%;
     margin-left: 42%;
 }
+
+a.nav-item.nav-link {
+    padding-left: 10px;
+    padding-top: 0;
+}
