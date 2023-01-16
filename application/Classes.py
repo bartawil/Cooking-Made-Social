@@ -1,4 +1,6 @@
-from flask import session, request
+import mysql
+from flask import session, request, flash, render_template
+from mysql.connector import errors
 
 from application import workshop_db, workshop_cursor
 
@@ -17,52 +19,66 @@ class Recipe:
         self._post_id = post_id
 
     def insert_to_db(self):
-        q = "INSERT INTO recipe (name_id, recipe_id, minutes, contributer_id, n_steps, steps, " \
-            "descriptor, n_ingredient, post_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) "
-        workshop_cursor.execute(q, (
-            self._name, self._post_id, self._minutes,
-            self._contributer_id, self._n_steps, self._steps,
-            self._description, self._n_ingredients, self._post_id))
-        workshop_db.commit()
+        try:
+            q = "INSERT recipe (name_id, recipe_id, minutes, contributer_id, n_steps, steps, " \
+                "descriptor, n_ingredient, post_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) "
+
+            workshop_cursor.execute(q, (
+                self._name, self._post_id, self._minutes,
+                self._contributer_id, self._n_steps, self._steps,
+                self._description, self._n_ingredients, self._post_id))
+            workshop_db.commit()
+            workshop_db.commit()
+        except:
+            return []
 
 
 def generate_id():
-    workshop_cursor.execute("SELECT MAX(post_id) FROM post")
-    output = workshop_cursor.fetchall()
-    return (output[0])[0] + 1
+    try:
+        workshop_cursor.execute("SELECT MAX(post_id) FROM post")
+        output = workshop_cursor.fetchall()
+        return (output[0])[0] + 1
+    except:
+        return []
 
 
 def find_posts_by_name(name, calories, fat, protein, sort_by):
-    # This SELECT statement will return the name_id, descriptor values
-    # for all recipes where the calories, total_fat, and protein values
-    # in the nutrition table are less than or equal to the given values,
-    # and the name_id matches the given pattern.
-    # The results will be ordered by the recipe_id in descending order.
-    q = "SELECT r.name_id, r.descriptor, r.post_id " \
-        "FROM recipe r " \
-        "JOIN nutrition n ON r.recipe_id = n.recipe_id " \
-        "WHERE n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s) AND r.name_id LIKE (%s)" \
-        "ORDER BY r.{} limit 1000".format(sort_by)
-    str = "%" + name + "%"
-    workshop_cursor.execute(q, (calories, fat, protein, str,))
-    post_list = workshop_cursor.fetchall()
-    return post_list
+    try:
+        # This SELECT statement will return the name_id, descriptor values
+        # for all recipes where the calories, total_fat, and protein values
+        # in the nutrition table are less than or equal to the given values,
+        # and the name_id matches the given pattern.
+        # The results will be ordered by the recipe_id in descending order.
+        q = "SELECT r.name_id, r.descriptor, r.post_id " \
+            "FROM recipe r " \
+            "JOIN nutrition n ON r.recipe_id = n.recipe_id " \
+            "WHERE n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s) AND r.name_id LIKE (%s)" \
+            "ORDER BY r.{} limit 1000".format(sort_by)
+        str = "%" + name + "%"
+        workshop_cursor.execute(q, (calories, fat, protein, str,))
+        post_list = workshop_cursor.fetchall()
+        return post_list
+    except:
+        return []
 
 
 def find_post_by_user_name(name, user_name, calories, fat, protein, sort_by):
-    # same as find_posts_by_name with user name filter
-    q = "SELECT r.name_id, r.descriptor, r.post_id " \
-        "FROM recipe r " \
-        "INNER JOIN users u ON r.contributer_id = u.user_id " \
-        "INNER JOIN nutrition n ON r.recipe_id = n.recipe_id " \
-        "WHERE u.user_name LIKE (%s) AND r.name_id LIKE (%s) " \
-        "AND n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s)" \
-        "ORDER BY r.{}  limit 1000".format(sort_by)
-    str_name = "%" + name + "%"
-    str_user_name = "%" + user_name + "%"
-    workshop_cursor.execute(q, (str_user_name, str_name, calories, fat, protein,))
-    post_list = workshop_cursor.fetchall()
-    return post_list
+    try:
+        # same as find_posts_by_name with user name filter
+        q = "SELECT r.name_id, r.descriptor, r.post_id " \
+            "FROM recipe r " \
+            "INNER JOIN users u ON r.contributer_id = u.user_id " \
+            "INNER JOIN nutrition n ON r.recipe_id = n.recipe_id " \
+            "WHERE u.user_name LIKE (%s) AND r.name_id LIKE (%s) " \
+            "AND n.calories <= (%s) AND n.total_fat <= (%s) AND n.protein <= (%s)" \
+            "ORDER BY r.{}  limit 1000".format(sort_by)
+        str_name = "%" + name + "%"
+        str_user_name = "%" + user_name + "%"
+        workshop_cursor.execute(q, (str_user_name, str_name, calories, fat, protein,))
+        post_list = workshop_cursor.fetchall()
+        return post_list
+    except:
+        return []
 
 
 class Post:
@@ -71,16 +87,22 @@ class Post:
         self._post_id = post_id
 
     def insert_to_db(self):
-        q = "INSERT INTO post (recipe_name, post_id) VALUES (%s, %s)"
-        workshop_cursor.execute(q, (self._recipe_name, self._post_id))
-        workshop_db.commit()
+        try:
+            q = "INSERT INTO post (recipe_name, post_id) VALUES (%s, %s)"
+            workshop_cursor.execute(q, (self._recipe_name, self._post_id))
+            workshop_db.commit()
+        except:
+            return []
 
 
 def get_preview_from_db():
-    q = "SELECT recipe.name_id, recipe.descriptor, recipe.post_id FROM recipe ORDER BY recipe_id DESC limit 10"
-    workshop_cursor.execute(q)
-    output = workshop_cursor.fetchall()
-    return output
+    try:
+        q = "SELECT recipe.name_id, recipe.descriptor, recipe.post_id FROM recipe ORDER BY recipe_id DESC limit 10"
+        workshop_cursor.execute(q)
+        output = workshop_cursor.fetchall()
+        return output
+    except:
+        return []
 
 
 class Nutrition:
@@ -96,11 +118,14 @@ class Nutrition:
         self._carbohydrates = carbohydrates
 
     def insert_to_db(self):
-        q = "INSERT INTO nutrition (recipe_id, calories, total_fat, sugar, sodium, " \
-            "protein, saturated_fat, carbohydrates) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-        workshop_cursor.execute(q, (self._recipe_id, self._calories, self._total_fat, self._sugar,
-                                    self._sodium, self._protein, self._saturated_fat, self._carbohydrates))
-        workshop_db.commit()
+        try:
+            q = "INSERT INTO nutrition (recipe_id, calories, total_fat, sugar, sodium, " \
+                "protein, saturated_fat, carbohydrates) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            workshop_cursor.execute(q, (self._recipe_id, self._calories, self._total_fat, self._sugar,
+                                        self._sodium, self._protein, self._saturated_fat, self._carbohydrates))
+            workshop_db.commit()
+        except:
+            return []
 
 
 class Ingredients:
@@ -110,25 +135,37 @@ class Ingredients:
         self.n_ingredient = n_ingredient
 
     def insert_to_db(self):
-        parsed_list = self._ingredient_list.split(",")
-        for i in parsed_list:
-            q = "INSERT INTO ingredients (recipe_id, ingredient_name) VALUES (%s, %s)"
-            workshop_cursor.execute(q, (self._recipe_id, i))
-        workshop_db.commit()
+        try:
+            parsed_list = self._ingredient_list.split(",")
+            for i in parsed_list:
+                q = "INSERT INTO ingredients (recipe_id, ingredient_name) VALUES (%s, %s)"
+                workshop_cursor.execute(q, (self._recipe_id, i))
+            workshop_db.commit()
+        except:
+            return []
 
 
 def get_current_user_id():
-    q = "SELECT user_id FROM users where user_name = (%s)"
-    workshop_cursor.execute(q, (session['cookie'],))
-    return workshop_cursor.fetchone()[0]
+    try:
+        q = "SELECT user_id FROM users where user_name = (%s)"
+        workshop_cursor.execute(q, (session['cookie'],))
+        return workshop_cursor.fetchone()[0]
+    except:
+        return []
 
 
 def get_top_users():
-    q = "SELECT likes.user_id, users.user_name FROM likes INNER join users ON users.user_id=likes.user_id " \
-        "GROUP BY user_id ORDER BY COUNT(*) desc limit 1000"
-    workshop_cursor.execute(q)
-    users = workshop_cursor.fetchall()
-    return users
+    try:
+        q = "SELECT likes.user_id, users.user_name FROM likes INNER join users ON users.user_id=likes.user_id " \
+            "GROUP BY user_id ORDER BY COUNT(*) desc limit 1000"
+        workshop_cursor.execute(q)
+        users = workshop_cursor.fetchall()
+        if not users:
+            print("No results found")
+            return None
+        return users
+    except:
+        return []
 
 
 class Users:
@@ -137,25 +174,34 @@ class Users:
         self._user_password = user_password
 
     def insert_to_db(self):
-        workshop_cursor.execute("INSERT INTO users(user_password, user_name) VALUES(%s, %s)",
-                                (self._user_password, self._user_name))
-        workshop_db.commit()
+        try:
+            workshop_cursor.execute("INSERT INTO users(user_password, user_name) VALUES(%s, %s)",
+                                    (self._user_password, self._user_name))
+            workshop_db.commit()
+        except:
+            return []
 
     def check_user_password(self):
-        # Check if user already exists in DB
-        sql_q = "SELECT user_name FROM users WHERE user_name=%s and user_password=%s"
-        param_q = (self._user_name, self._user_password)
+        try:
+            # Check if user already exists in DB
+            sql_q = "SELECT user_name FROM users WHERE user_name=%s and user_password=%s"
+            param_q = (self._user_name, self._user_password)
 
-        workshop_cursor.execute(sql_q, param_q)
-        result = workshop_cursor.fetchone()
-        return result
+            workshop_cursor.execute(sql_q, param_q)
+            result = workshop_cursor.fetchone()
+            return result
+        except:
+            return []
 
     def check_if_user_exist(self):
-        # Check if user already exists in DB
-        sql_q = "SELECT user_name FROM users WHERE user_name=%s"
-        param_q = (self._user_name,)
-        workshop_cursor.execute(sql_q, param_q)
-        return workshop_cursor.fetchone()
+        try:
+            # Check if user already exists in DB
+            sql_q = "SELECT user_name FROM users WHERE user_name=%s"
+            param_q = (self._user_name,)
+            workshop_cursor.execute(sql_q, param_q)
+            return workshop_cursor.fetchone()
+        except:
+            return []
 
 
 class Likes:
@@ -200,72 +246,101 @@ class ComplexQuery:
         self.query = query
 
     def execute_complex_query(self):
-        workshop_cursor.execute(self.query)
-        posts = workshop_cursor.fetchall()
-        return posts
+        try:
+            workshop_cursor.execute(self.query)
+            posts = workshop_cursor.fetchall()
+            return posts
+        except:
+            return []
 
 
 class RecipePost:
     def __init__(self):
         pass
 
-
     def get_recipe(self, post_id):
-        query = "SELECT * FROM recipe WHERE recipe.post_id=%s"
-        workshop_cursor.execute(query, (post_id,))
-        recipe = workshop_cursor.fetchall()
-        return recipe
+        try:
+            query = "SELECT * FROM recipe WHERE recipe.post_id=%s"
+            workshop_cursor.execute(query, (post_id,))
+            recipe = workshop_cursor.fetchall()
+            return recipe
+        except:
+            return []
 
     def get_ingredients(self, recipe_id):
-        query = "SELECT * FROM ingredients WHERE recipe_id=%s"
-        workshop_cursor.execute(query, (recipe_id,))
-        ingredients = workshop_cursor.fetchall()
-        return ingredients
+        try:
+            query = "SELECT * FROM ingredients WHERE recipe_id=%s"
+            workshop_cursor.execute(query, (recipe_id,))
+            ingredients = workshop_cursor.fetchall()
+            return ingredients
+        except:
+            return []
 
     def get_nutrition(self, recipe_id):
-        query = "SELECT * FROM nutrition WHERE recipe_id=%s"
-        workshop_cursor.execute(query, (recipe_id,))
-        nutrition = workshop_cursor.fetchall()
-        return nutrition
+        try:
+            query = "SELECT * FROM nutrition WHERE recipe_id=%s"
+            workshop_cursor.execute(query, (recipe_id,))
+            nutrition = workshop_cursor.fetchall()
+            return nutrition
+        except:
+            return []
 
     def get_user_id(self):
-        query = "SELECT user_id FROM users WHERE user_name=%s"
-        user_name = session.get("cookie")
-        workshop_cursor.execute(query, (user_name,))
-        user_id = workshop_cursor.fetchall()
-        return user_id
+        try:
+            query = "SELECT user_id FROM users WHERE user_name=%s"
+            user_name = session.get("cookie")
+            workshop_cursor.execute(query, (user_name,))
+            user_id = workshop_cursor.fetchall()
+            return user_id
+        except:
+            return []
 
     def get_username(self, user_id):
-        query = "SELECT user_name FROM users WHERE users.user_id=%s"
-        workshop_cursor.execute(query, (user_id,))
-        username = workshop_cursor.fetchall()
-        return username[0]
+        try:
+            query = "SELECT user_name FROM users WHERE users.user_id=%s"
+            workshop_cursor.execute(query, (user_id,))
+            username = workshop_cursor.fetchall()
+            return username[0]
+        except:
+            return []
 
     def get_comments(self, post_id):
-        query = "SELECT * FROM comments WHERE comments.post_id=%s"
-        workshop_cursor.execute(query, (post_id,))
-        commnt = workshop_cursor.fetchall()
-        return commnt
+        try:
+            query = "SELECT * FROM comments WHERE comments.post_id=%s"
+            workshop_cursor.execute(query, (post_id,))
+            commnt = workshop_cursor.fetchall()
+            return commnt
+        except:
+            return []
 
     def add_comment(self, comment_id, recipe, user_id):
-        comment_content = request.form.get("comment")
-        if comment_content is None:
-            return
-        query = 'INSERT INTO comments (comment_id, post_id, content, user_id) VALUES (%s, %s, %s, %s)'
-        workshop_cursor.execute(query, (comment_id, recipe[0][8], comment_content, user_id[0][0]))
-        workshop_db.commit()
+        try:
+            comment_content = request.form.get("comment")
+            if comment_content is None:
+                return
+            query = 'INSERT INTO comments (comment_id, post_id, content, user_id) VALUES (%s, %s, %s, %s)'
+            workshop_cursor.execute(query, (comment_id, recipe[0][8], comment_content, user_id[0][0]))
+            workshop_db.commit()
+        except:
+            return []
 
     def get_likes(self, post_id):
-        query = 'SELECT * FROM likes WHERE likes.post_id=%s'
-        workshop_cursor.execute(query, (post_id,))
-        likes = workshop_cursor.fetchall()
-        return len(likes)
+        try:
+            query = 'SELECT * FROM likes WHERE likes.post_id=%s'
+            workshop_cursor.execute(query, (post_id,))
+            likes = workshop_cursor.fetchall()
+            return len(likes)
+        except:
+            return []
 
     def add_like(self, post_id):
-        user_id = self.get_user_id()[0][0]
-        query = f'INSERT INTO likes(post_id,user_id) VALUES{post_id, user_id}'
-        query_check = f'SELECT * FROM likes WHERE user_id={user_id} AND post_id={post_id}'
-        workshop_cursor.execute(query_check)
-        if not workshop_cursor.fetchall():
-            workshop_cursor.execute(query)
-            workshop_db.commit()
+        try:
+            user_id = self.get_user_id()[0][0]
+            query = f'INSERT INTO likes(post_id,user_id) VALUES{post_id, user_id}'
+            query_check = f'SELECT * FROM likes WHERE user_id={user_id} AND post_id={post_id}'
+            workshop_cursor.execute(query_check)
+            if not workshop_cursor.fetchall():
+                workshop_cursor.execute(query)
+                workshop_db.commit()
+        except:
+            return []
