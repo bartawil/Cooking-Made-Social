@@ -4,9 +4,9 @@ import mysql.connector
 
 workshop_db = mysql.connector.connect(
     host='localhost',
-    user='team_20',
-    password='0020',
-    database='db_20'
+    user='root',
+    password='1234',
+    database='database_workshop'
 )
 
 workshop_cursor = workshop_db.cursor()

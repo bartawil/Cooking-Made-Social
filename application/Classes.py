@@ -278,7 +278,7 @@ class RecipePost:
 
     def get_nutrition(self, recipe_id):
         try:
-            query = "SELECT * FROM nutrition WHERE recipe_id=%s"
+            query = "SELECT calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates FROM nutrition WHERE recipe_id=%s"
             workshop_cursor.execute(query, (recipe_id,))
             nutrition = workshop_cursor.fetchall()
             return nutrition
