@@ -17,3 +17,7 @@ CookingMadeSocial was conceived as a project submission for a university databas
 <p>
   <img src="README/recipe.png" width="813">
 </p>
+
+## Collaborators
+
+Developed by Bar Tawil and another participant in the workshop.
